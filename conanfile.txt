@@ -1,0 +1,12 @@
+[requires]
+boost/1.79.0
+openssl/1.1.1o
+nlohmann_json/3.10.5
+fmt/8.1.1
+
+[generators]
+cmake_find_package
+cmake_paths
+
+[options]
+fmt:header_only=True
