@@ -5,7 +5,6 @@ A header-only HTTP library based on boost::beast and nlohmann::json.
 ## Features
 
 *   GET, PUT, POST, PATCH and DELETE resources from/to a REST service
-*   serialize/deserialize json to/from C++ structures
 *   HTTP/HTTPS
 *   Basic and Bearer token authentication
 *   Post FormData (Get FormData not yet implemented)
