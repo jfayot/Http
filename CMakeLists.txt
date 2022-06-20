@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Http)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-find_package(Boost 1.79.0 REQUIRED)
-find_package(OpenSSL 1.1.1 	 REQUIRED)
-find_package(nlohmann_json 3.10.5 REQUIRED)
-find_package(fmt 8.1.1 REQUIRED)
+find_package(Boost 1.78.0 REQUIRED)
+find_package(OpenSSL 1.1 	 REQUIRED)
+find_package(nlohmann_json 3.10 REQUIRED)
+find_package(fmt 8.1 REQUIRED)
 
 set(HTTP_INCLUDE_FILES
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/detail/Base64.hpp
@@ -38,7 +38,7 @@ set(HTTP_INCLUDE_FILES
   )
   
   set(HTTP_SRC_FILES
-  ${CMAKE_CURRENT_LIST_DIR}/src/TestServer.hpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/EchoServer.hpp
   ${CMAKE_CURRENT_LIST_DIR}/src/example.cpp
 )
 

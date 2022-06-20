@@ -1,36 +1,37 @@
-#include "TestServer.hpp"
+#include "EchoServer.hpp"
 #include "Http/HttpTypes.hpp"
 
 #include <iostream>
+#include <cassert>
 
-struct titi
+struct Person
 {
-    std::string coucou;
-    int toto;
+    std::string name;
+    int age;
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(titi, coucou, toto)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Person, name, age)
 };
 
 int main()
 {
     try
     {
-        start_test_server();
+        start_echo_server();
 
-        titi toto{"coucou", 42};
-        
+        Person person{"captain", 42};
+
         Http::Client client{ "http://127.0.0.1:8281" };
 
         auto res = client.get("/")
-            .body(toto)
+            .body(person)
             .send()
             .get();
 
         if (true == res.ok())
         {
-            std::cout << std::endl << res.body().json() << std::endl;
-            auto content = res.body().get<titi>();
-            std::cout << content.coucou << "; " << content.toto << std::endl;
+            std::cout << res.body().json() << std::endl;
+            auto content = res.body().get<Person>();
+            assert(person == content);
         }
         else
         {
@@ -39,6 +40,6 @@ int main()
     }
     catch (std::exception &ex)
     {
-        std::cout << "coucou" << ex.what() << std::endl;
+        std::cout << ex.what() << std::endl;
     }
 }

@@ -1,6 +1,4 @@
-#include <boost/beast/core.hpp>
-#include <boost/beast/http.hpp>
-#include <boost/beast/version.hpp>
+#include <boost/beast.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/config.hpp>
@@ -26,8 +24,7 @@ using namespace std::chrono_literals;
 template <
     class Body, class Allocator,
     class Send>
-void handle_request(http::request<Body, http::basic_fields<Allocator>> &&req,
-                    Send &&send)
+void handle_request(http::request<Body, http::basic_fields<Allocator>> &&req, Send &&send)
 {
     std::cout << "-----------------" << std::endl;
     for (const auto& field: req)
@@ -57,8 +54,7 @@ void handle_request(http::request<Body, http::basic_fields<Allocator>> &&req,
         req.target().find("..") != beast::string_view::npos)
         return send(bad_request("Illegal request-target"));
 
-    http::string_body::value_type body = "{\"coucou\":\"titi\",\"toto\":42}";
-    //http::string_body::value_type body = "cuicui";
+    http::string_body::value_type body = req.body();
 
     // Cache the size since we need it after the move
     auto const size = body.size();
@@ -69,8 +65,7 @@ void handle_request(http::request<Body, http::basic_fields<Allocator>> &&req,
         std::make_tuple(std::move(body)),
         std::make_tuple(http::status::ok, req.version())};
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    res.set(http::field::content_type, "application/json");
-    //res.set(http::field::content_type, "application/text");
+    res.set(http::field::content_type, req[http::field::content_type]);
     res.content_length(size);
     res.keep_alive(req.keep_alive());
     return send(std::move(res));
@@ -151,7 +146,6 @@ void do_session(
         }
         if (close)
         {
-            std::cout << "close" << std::endl;
             // This means we should close the connection, usually because
             // the response indicated the "Connection: close" semantic.
             break;
@@ -164,7 +158,7 @@ void do_session(
     // At this point the connection is closed gracefully
 }
 
-void start_test_server()
+void start_echo_server()
 {
     std::thread{ []{
         // The io_context is required for all I/O
