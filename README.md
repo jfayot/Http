@@ -16,16 +16,17 @@ A header-only HTTP library based on boost::beast and nlohmann::json.
 *   Boost::beast
 *   OpenSSL
 *   nlohmann::json
-*   fmt
+*   fmtlib::fmt
+
+All dependencies, except OpenSSL, are pulled and compiled thanks to CPM.cmake
 
 ## Build
 
-Use conan to install dependencies:
+
+Use cmake to configure and build:
 
 ```console
-pip install conan
-mkdir build && pushd build && conan install .. && popd
-cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./build/conan_path.cmake -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build
 cmake --build build 
 ```
 

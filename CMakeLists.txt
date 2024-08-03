@@ -2,14 +2,48 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Http)
 
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
+include(cmake/CPM.cmake)
 
-find_package(Boost 1.78.0 REQUIRED)
-find_package(OpenSSL 1.1 	 REQUIRED)
-find_package(nlohmann_json 3.10 REQUIRED)
-find_package(fmt 8.1 REQUIRED)
+# check if project is standalone or embedded
+if (NOT DEFINED IS_ROOT_PROJECT)
+  set(IS_ROOT_PROJECT OFF)
+  if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(IS_ROOT_PROJECT ON)
+    message(STATUS "CMake version: ${CMAKE_VERSION}")
+  endif ()
+endif ()
 
-set(HTTP_INCLUDE_FILES
+option(BUILD_TESTS "Build tests" ${IS_ROOT_PROJECT})
+
+CPMAddPackage(
+  NAME nlohmann_json
+  VERSION 3.11.3
+  GITHUB_REPOSITORY nlohmann/json
+  OPTIONS
+    "JSON_BuildTests OFF"
+    "JSON_MultipleHeaders OFF"
+)
+
+CPMAddPackage(
+  NAME fmt
+  GIT_TAG 11.0.2
+  GITHUB_REPOSITORY fmtlib/fmt
+  EXCLUDE_FROM_ALL True
+)
+
+CPMAddPackage(
+  NAME Boost
+  VERSION 1.84.0
+  URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
+  OPTIONS
+    "BOOST_ENABLE_CMAKE ON"
+    "BOOST_INCLUDE_LIBRARIES beast\\\;uuid"
+  EXCLUDE_FROM_ALL True
+)
+
+find_package(OpenSSL 1.1 REQUIRED)
+
+add_library(Http INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/detail/Base64.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/detail/basic_file_body.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/detail/basic_multipart_body.hpp
@@ -35,38 +69,25 @@ set(HTTP_INCLUDE_FILES
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/HttpRequest.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/HttpResponse.hpp
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/HttpTypes.hpp
-  )
-  
-  set(HTTP_SRC_FILES
-  ${CMAKE_CURRENT_LIST_DIR}/src/EchoServer.hpp
-  ${CMAKE_CURRENT_LIST_DIR}/src/example.cpp
 )
 
-add_executable(Http)
+add_library(Http::client ALIAS Http)
 
-target_sources(Http
-  PRIVATE
-    ${HTTP_INCLUDE_FILES}
-    ${HTTP_SRC_FILES}
-)
+target_include_directories(Http INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
 
-target_include_directories(Http
-  PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/include
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/src
-)
-
-target_compile_features(Http
-  PUBLIC
-    cxx_std_17
-)
+target_compile_features(Http INTERFACE cxx_std_17)
 
 target_link_libraries(Http
-  PUBLIC
-    Boost::boost
+  INTERFACE
+    Boost::beast
+    Boost::uuid
     OpenSSL::SSL
     OpenSSL::Crypto
     nlohmann_json::nlohmann_json
     fmt::fmt-header-only
 )
+
+if (BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
+

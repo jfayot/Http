@@ -108,7 +108,7 @@ namespace Http::detail
     inline std::string RequestImpl::dump() const
     {
         //TODO add headers and synthetic body dump
-        return boost::beast::http::to_string(m_verb).to_string() + " " + m_target;
+        return std::string(boost::beast::http::to_string(m_verb)) + " " + m_target;
     }
 }
 
