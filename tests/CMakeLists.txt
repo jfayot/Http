@@ -13,6 +13,10 @@ add_executable(tests
   main.cpp
 )
 
+if (MSVC)
+  target_compile_options(tests PRIVATE /bigobj)
+endif ()
+
 target_link_libraries(tests
   PRIVATE
     Http::client
