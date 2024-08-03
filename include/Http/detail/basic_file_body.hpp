@@ -23,7 +23,7 @@ namespace Http::detail
             {
             }
 
-            void init(boost::optional<unsigned long> const&, boost::beast::error_code& ec)
+            void init(boost::optional<uint64_t> const&, boost::beast::error_code& ec)
             {
                 ec = {};
             }
@@ -115,7 +115,7 @@ namespace Http::detail
             }
         };
 
-        static unsigned long size(value_type const& body)
+        static uint64_t size(value_type const& body)
         {
             return body.size();
         }

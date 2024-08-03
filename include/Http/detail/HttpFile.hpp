@@ -56,15 +56,15 @@ namespace Http::detail
             boost::beast::file::open(path, mode, ec);
         }
 
-        std::size_t size(boost::beast::error_code& ec) const
+        uint64_t size(boost::beast::error_code& ec) const
         {
             return boost::beast::file::size(ec);
         }
 
-        std::size_t size() const
+        uint64_t size() const
         {
             boost::beast::error_code ec;
-            std::size_t result = size(ec);
+            uint64_t result = size(ec);
             if (ec)
             {
                 throw boost::beast::system_error(ec);

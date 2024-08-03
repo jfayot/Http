@@ -23,7 +23,7 @@ namespace Http::detail
             {
             }
 
-            void init(boost::optional<unsigned long> const& length, boost::beast::error_code& ec)
+            void init(boost::optional<uint64_t> const& length, boost::beast::error_code& ec)
             {
                 if (length)
                 {
@@ -98,7 +98,7 @@ namespace Http::detail
             }
         };
 
-        static std::size_t size(value_type const& body)
+        static uint64_t size(value_type const& body)
         {
             return body.size();
         }

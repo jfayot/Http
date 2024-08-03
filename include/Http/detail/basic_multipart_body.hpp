@@ -18,7 +18,7 @@ namespace Http::detail
             template<bool isRequest, class Fields>
             explicit reader(boost::beast::http::header<isRequest, Fields>&, value_type&) {}
 
-            void init(boost::optional<unsigned long> const&, boost::beast::error_code&) {}
+            void init(boost::optional<uint64_t> const&, boost::beast::error_code&) {}
 
             template<class ConstBufferSequence>
             std::size_t put(ConstBufferSequence const&, boost::beast::error_code&) { return 0; }
@@ -167,7 +167,7 @@ namespace Http::detail
             }
         };
 
-        static unsigned long size(value_type const& body)
+        static uint64_t size(value_type const& body)
         {
             return body.size();
         }

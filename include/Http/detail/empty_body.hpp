@@ -60,7 +60,7 @@ namespace Http::detail
             }
         };
 
-        static std::size_t size(value_type)
+        static uint64_t size(value_type)
         {
             return 0;
         }
