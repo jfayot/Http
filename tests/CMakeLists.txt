@@ -25,6 +25,19 @@ target_link_libraries(tests
     gmock
 )
 
+if (ENABLE_COVERAGE)
+  if(CMAKE_CXX_COMPILER_ID MATCHES GNU AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_options(tests
+      PRIVATE
+        "--coverage"
+      )
+    target_link_options(tests
+      PRIVATE
+        "--coverage"
+      )
+  endif()
+endif()
+
 # ---- Enable testing ----
 enable_testing()
 add_test(tests tests)

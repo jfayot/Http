@@ -14,6 +14,7 @@ if (NOT DEFINED IS_ROOT_PROJECT)
 endif ()
 
 option(BUILD_TESTS "Build tests" ${IS_ROOT_PROJECT})
+option(ENABLE_COVERAGE "Enable coverage" ${IS_ROOT_PROJECT})
 
 CPMAddPackage(
   NAME nlohmann_json
