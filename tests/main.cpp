@@ -20,16 +20,20 @@ class HttpFixture : public ::testing::Test
 {
   virtual void SetUp() override
   {
-    start_echo_server();
+    server = std::make_unique<EchoServer>();
+    server->start();
     client = std::make_unique<Http::Client>("http://127.0.0.1:8281");
   }
 
   virtual void TearDown() override
   {
-    client.reset();
+    server->stop();
+    server.release();
+    client.release();
   }
 
 protected:
+  std::unique_ptr<EchoServer> server;
   std::unique_ptr<Http::Client> client;
 };
 
