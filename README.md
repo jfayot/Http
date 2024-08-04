@@ -1,20 +1,20 @@
 # HTTP library
 
-A header-only HTTP library based on boost::beast and nlohmann::json.
+A header-only HTTP client library based on boost::beast and nlohmann::json.
 
 ## Features
 
 *   GET, PUT, POST, PATCH and DELETE resources from/to a REST service
 *   HTTP/HTTPS
 *   Basic and Bearer token authentication
-*   Post FormData (Get FormData not yet implemented)
+*   Post FormData
 *   Asynchronous response wrapped into future
 *   Upload/Download files
 
 ## Dependencies
 
-*   Boost::beast
 *   OpenSSL
+*   Boost::beast
 *   nlohmann::json
 *   fmtlib::fmt
 
@@ -36,19 +36,26 @@ cmake --build build
 #include "Http/HttpTypes.hpp"
 struct Person
 {
-    std::string name;
-    int age;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Person, name, age)
+  std::string name;
+  int age;
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(Person, name, age)
 };
 
 int main()
 {
-    Person person{ "captain", 42 };
-    
-    Http::Client client{ "http://127.0.0.1:8080" };
+  Person person{ "captain", 42 };
+  Http::Client client{ "http://127.0.0.1:8080" };
+  Http::Request request = client.post("/persons").body(person);
+  std::shared_future<Http::Response> future = request.send();
 
-    auto res = client.post("/Persons").body(person).send().get();
+  // Do whatever needed
+  // ...
 
-    if (true == res.ok()) ...
+  Http::Response res = future.get();
+
+  if (true == res.ok())
+  {
+    Person content = res.body().get<Person>();
+  }
+}
 ```
