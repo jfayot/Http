@@ -2,6 +2,10 @@
 
 A header-only HTTP client library based on boost::beast and nlohmann::json.
 
+[![codecov](https://codecov.io/github/jfayot/Http/graph/badge.svg?token=5I11CHFIZI)](https://codecov.io/github/jfayot/Http)
+
+[![Windows Build Status](https://github.com/jfayot/Http/actions/workflows/tests.yml/badge.svg)](https://github.com/jfayot/Http/actions/workflows/tests.yml)
+
 ## Features
 
 *   GET, PUT, POST, PATCH and DELETE resources from/to a REST service
