@@ -50,6 +50,31 @@ namespace Http
         template <typename ContentType>
         ContentType get() const { return json().get<ContentType>(); }
 
+        constexpr bool isEmpty() const
+        {
+            return std::holds_alternative<TEmpty>(m_content);
+        }
+
+        constexpr bool isText() const
+        {
+            return std::holds_alternative<std::string>(m_content);
+        }
+
+        constexpr bool isJson() const
+        {
+            return std::holds_alternative<nlohmann::json>(m_content);
+        }
+
+        constexpr bool isPath() const
+        {
+            return std::holds_alternative<fs::path>(m_content);
+        }
+
+        constexpr bool isFormData() const
+        {
+            return std::holds_alternative<FormData>(m_content);
+        }
+
         bool save(const fs::path &path) const
         {
             auto visitor = overloaded{
