@@ -37,5 +37,6 @@ jobs:
         ctest --test-dir ${{github.workspace}}/build/tests --build-config ${{env.BUILD_TYPE}} --output-on-failure
 
     - name: Codecov
-      run: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-
+      uses: codecov/codecov-action@v4.0.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
