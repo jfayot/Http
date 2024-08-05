@@ -47,7 +47,6 @@ private:
       req.target()[0] != '/' ||
       req.target().find("..") != beast::string_view::npos)
       return send(bad_request("Illegal request-target"));
-
     // Cache the size since we need it after the move
     auto const size = req.body().size();
 
@@ -62,16 +61,39 @@ private:
     }
     else
     {
-      http::string_body::value_type body = req.body();
-      http::response<http::string_body> res{
-        std::piecewise_construct,
-        std::make_tuple(std::move(body)),
-        std::make_tuple(http::status::ok, req.version())};
-      res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-      res.set(http::field::content_type, req[http::field::content_type]);
-      res.content_length(size);
-      res.keep_alive(req.keep_alive());
-      return send(std::move(res));
+      auto contentType = req[http::field::content_type];
+      if (contentType == "text" ||
+        contentType == "application/text" ||
+        contentType == "application/json" ||
+        contentType == "application/xml"
+      )
+      {
+        http::string_body::value_type body = req.body();
+        http::response<http::string_body> res{
+          std::piecewise_construct,
+          std::make_tuple(std::move(body)),
+          std::make_tuple(http::status::ok, req.version())};
+        res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+        res.set(http::field::content_type, contentType);
+        res.content_length(size);
+        res.keep_alive(req.keep_alive());
+        return send(std::move(res));
+      }
+      else if (contentType.rfind("multipart/form-data",0) == 0)
+      {
+        http::string_body::value_type body{"ok"};
+        http::response<http::string_body> res{
+          std::piecewise_construct,
+          std::make_tuple(std::move(body)),
+          std::make_tuple(http::status::ok, req.version())};
+        res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+        res.set(http::field::content_type, "application/text");
+//        res.content_length(2);
+        res.keep_alive(req.keep_alive());
+        return send(std::move(res));
+      }
+
+      return send(bad_request("Unhandled request content-type"));
     }
   }
 

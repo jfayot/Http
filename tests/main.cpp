@@ -77,13 +77,25 @@ TEST_F(HttpFixture, test_get_struct)
   ASSERT_EQ(content, body);
 }
 
+TEST_F(HttpFixture, test_post_simple_form_data)
+{
+  Http::FormData body;
+  body.add("name", "captain");
+  body.add("age", "42");
+  auto res = client->post("/").body(body).send().get();
+  ASSERT_TRUE(res.ok());
+  ASSERT_TRUE(res.body().isText());
+  auto content = res.body().text();
+  ASSERT_EQ(content, "ok");
+}
+
 TEST_F(HttpFixture, test_post_struct)
 {
-  Person person{"captain", 42};
-  auto res = client->post("/").body(person).send().get();
+  Person body{"captain", 42};
+  auto res = client->post("/").body(body).send().get();
   ASSERT_TRUE(res.ok());
   auto content = res.body().get<Person>();
-  ASSERT_EQ(content, person);
+  ASSERT_EQ(content, body);
 }
 
 TEST_F(HttpFixture, test_put_struct)
