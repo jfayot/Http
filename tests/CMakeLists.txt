@@ -39,5 +39,7 @@ if (ENABLE_COVERAGE)
 endif()
 
 # ---- Enable testing ----
+include(GoogleTest)
 enable_testing()
-add_test(tests tests)
+gtest_discover_tests(tests)
+#add_test(tests tests)

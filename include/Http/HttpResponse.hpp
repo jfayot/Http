@@ -139,7 +139,7 @@ namespace Http
         void handleCancel()
         {
             m_reason = "Request canceled";
-            m_status = castFromEnum(boost::beast::http::status::client_closed_request);
+            m_status = 499;
         }
 
         void handleError(const boost::beast::error_code& ec, const std::string& reason)
