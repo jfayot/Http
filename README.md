@@ -26,6 +26,8 @@ A header-only HTTP client library based on boost::beast and nlohmann::json.
 
 All dependencies are pulled and compiled thanks to [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)
 
+For Windows platform, you'll need to have NASM installed and your PATH pointing at it to build OpenSSL correctly.
+
 ## Build
 
 Use cmake to configure, build and install:
@@ -60,7 +62,7 @@ CPMAddPackage("gh:jfayot/Http@1.0.0")
 
 add_executable(your_target ${CMAKE_CURRENT_LIST_DIR}/main.cpp)
 
-target_link_libraries(your_target PRIVATE Http::Client)
+target_link_libraries(your_target PRIVATE Http::client)
 ```
 
 ## Minimal example
