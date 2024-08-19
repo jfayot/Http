@@ -9,30 +9,58 @@ A header-only HTTP client library based on boost::beast and nlohmann::json.
 
 ## Features
 
-*   GET, PUT, POST, PATCH and DELETE resources from/to a REST service
-*   HTTP/HTTPS
-*   Basic and Bearer token authentication
-*   Post FormData
-*   Asynchronous response wrapped into future
-*   Upload/Download files
+* GET, PUT, POST, PATCH and DELETE resources from/to a REST service
+* HTTP/HTTPS
+* Basic and Bearer token authentication
+* Post FormData
+* Asynchronous response wrapped into future
+* Upload/Download files
 
 ## Dependencies
 
-*   OpenSSL
-*   Boost::beast
-*   nlohmann::json
-*   fmtlib::fmt
+* OpenSSL (through [openssl-cmake](https://github.com/jimmy-park/openssl-cmake))
+* Boost::beast
+* Boost::uuid
+* nlohmann::json
+* fmtlib::fmt
 
-All dependencies, except OpenSSL, are pulled and compiled thanks to CPM.cmake
+All dependencies are pulled and compiled thanks to [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)
 
 ## Build
 
-
-Use cmake to configure and build:
+Use cmake to configure, build and install:
 
 ```console
-cmake -S . -B build
-cmake --build build 
+cmake -B build -DCMAKE_INSTALL_PREFIX=<your_install_dir>
+cmake --build build --target install
+```
+
+## Include directly into your project
+
+Use [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) to include directly into your project:
+
+```cmake
+cmake_minimum_required(VERSION 3.16)
+
+project(your_project
+  LANGUAGES CXX
+)
+
+# download CPM.cmake
+file(
+  DOWNLOAD
+  https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.2/CPM.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake
+  EXPECTED_HASH SHA256=c8cdc32c03816538ce22781ed72964dc864b2a34a310d3b7104812a5ca2d835d
+)
+
+include(${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake)
+
+CPMAddPackage("gh:jfayot/Http@1.0.0")
+
+add_executable(your_target ${CMAKE_CURRENT_LIST_DIR}/main.cpp)
+
+target_link_libraries(your_target PRIVATE Http::Client)
 ```
 
 ## Minimal example
@@ -62,5 +90,7 @@ int main()
   {
     Person content = res.body().get<Person>();
   }
+
+  return 0;
 }
 ```

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # lib's version
-set(version 0.0.1)
+set(version 1.0.0)
 
 project(Http
   VERSION ${version}
@@ -34,6 +34,7 @@ endif ()
 option(BUILD_TESTS "Build tests" ${IS_ROOT_PROJECT})
 option(ENABLE_COVERAGE "Enable coverage" ${IS_ROOT_PROJECT})
 
+CPMGetPackage(OpenSSL)
 CPMGetPackage(CPMPackageProject)
 CPMGetPackage(CPMLicenses)
 CPMGetPackage(Ccache)
@@ -41,7 +42,10 @@ CPMGetPackage(Boost)
 CPMGetPackage(fmt)
 CPMGetPackage(nlohmann_json)
 
-find_package(OpenSSL 1.1 REQUIRED)
+cpm_licenses_create_disclaimer_target(write-licenses
+  "${CMAKE_CURRENT_BINARY_DIR}/third_party.txt"
+  "${CPM_PACKAGES}"
+)
 
 add_library(http_client INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/include/Http/detail/Base64.hpp
@@ -91,10 +95,7 @@ target_link_libraries(http_client
     fmt::fmt-header-only
 )
 
-cpm_licenses_create_disclaimer_target(write-licenses
-  "${CMAKE_CURRENT_BINARY_DIR}/third_party.txt"
-  "${CPM_PACKAGES}"
-)
+add_dependencies(http_client write-licenses)
 
 if (BUILD_TESTS)
   add_subdirectory(tests)
@@ -115,5 +116,5 @@ packageProject(
   VERSION_HEADER Http/version.h
   DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 11.0.2; Boost 1.85.0; nlohmann_json 3.11.3"
+  DEPENDENCIES "OpenSSL 3.3.1; fmt 11.0.2; Boost 1.85.0; nlohmann_json 3.11.3"
 )

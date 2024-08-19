@@ -1,18 +1,30 @@
 # CPM Package Lock
 # This file should be committed to version control
 
+# OpenSSL
+CPMDeclarePackage(OpenSSL
+  NAME openssl-cmake
+  URL https://github.com/jimmy-park/openssl-cmake/archive/main.tar.gz
+  OPTIONS
+    "OPENSSL_CONFIGURE_OPTIONS no-shared\\\\;no-tests"
+    "OPENSSL_TARGET_VERSION 3.3.1"
+)
+
+# CPMPackageProject
 CPMDeclarePackage(CPMPackageProject
   NAME PackageProject.cmake
   GITHUB_REPOSITORY TheLartians/PackageProject.cmake
   VERSION 1.11.2
 )
 
+# CPMLicenses
 CPMDeclarePackage(CPMLicenses
   NAME CPMLicenses.cmake 
   GITHUB_REPOSITORY cpm-cmake/CPMLicenses.cmake
   VERSION 0.0.7
 )
 
+# Ccache
 CPMDeclarePackage(Ccache
   NAME Ccache.cmake
   GITHUB_REPOSITORY TheLartians/Ccache.cmake
